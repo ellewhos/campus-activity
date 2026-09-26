@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  background: #f7f8fa;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.van-card {
+  margin: 12px;
+  border-radius: 12px;
+}
+
+.van-nav-bar {
+  margin-bottom: 12px;
+}
