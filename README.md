@@ -1,9 +1,3 @@
-# Vue 3 + Vite
-
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
-
 # 校园活动报名 H5
 
 基于 Vue 3 开发的移动端校园活动报名系统，主要用于活动浏览、活动报名、报名记录管理等场景。
@@ -52,22 +46,88 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 - Vant
 - localStorage
 
-## 项目结构
+## 核心实现
+
+### 活动筛选
+
+通过 `ref` 保存当前筛选状态与搜索关键字，通过 `computed` 和 `filter` 动态计算需要展示的活动列表。
+
+活动状态筛选支持：
+
+- 全部
+- 报名中
+- 已满员
+
+同时支持按照活动名称进行搜索，并与状态筛选组合使用。
+
+### 报名状态管理
+
+通过 Pinia 集中维护报名数据，并在新增和删除报名记录时同步更新 localStorage。
+
+主要包括：
+
+- 新增报名记录
+- 删除报名记录
+- 页面间共享报名状态
+- 页面刷新后恢复报名数据
+
+### 报名人数计算
+
+通过活动 `id` 与报名记录中的 `activityId` 进行匹配，并使用 `filter()` 和 `.length` 动态统计当前活动报名人数。
+
+根据：
 
 ```text
-src
-├── data
-│   └── activities.js
-├── router
-│   └── index.js
-├── stores
-│   └── registration.js
-├── views
-│   ├── ActivityList.vue
-│   ├── ActivityDetail.vue
-│   ├── Apply.vue
-│   ├── MyApply.vue
-│   └── Success.vue
-├── App.vue
-├── main.js
-└── style.css
+总名额 - 已报名人数
+```
+计算剩余名额，并动态判断活动是否已满员。
+
+### 报名人数计算
+
+提交报名时依次进行：
+
+1. 必填项校验
+2. 手机号格式校验
+3. 重复报名校验
+4. 活动名额校验
+
+全部校验通过后才会真正写入报名数据。
+
+### 手机号脱敏
+“我的报名”页面不会直接展示完整手机号。
+例如：
+```text
+13812345678
+```
+显示为：
+```text
+138****5678
+```
+
+## 项目截图
+### 活动列表
+![活动列表](./docs/activity-list.png)
+
+### 活动详情
+![活动详情](./docs/activity-detail.png)
+
+### 活动报名
+![活动报名](./docs/apply.png)
+
+### 我的报名
+![我的报名](./docs/my-apply.png)
+
+## 本地运行
+```bash
+npm install
+```
+启动开发环境：
+```bash
+npm run dev
+```
+
+## 后续计划
+- 接入 Spring Boot + MySQL 后端
+- 使用 Axios 调用真实接口
+- 增加用户登录功能
+- 增加活动发布及后台管理功能
